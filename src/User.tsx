@@ -1,72 +1,104 @@
+import { useEffect, useState } from "react";
+import { userType } from "./App";
+import { useNavigate } from "react-router-dom";
+
+type User = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  gender: string;
+  ip_address: string;
+  friends: {
+    id: number;
+    name: string;
+  }[];
+};
+
+const isAdmin = localStorage.getItem("role")! == "admin";
+const isSuperUser = localStorage.getItem("role")! == "super_user";
+
 const User = () => {
+  const [users, setUsers] = useState<User[]>([]);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!userType.includes(localStorage.getItem("role")!)) navigate("/login");
+
+    fetch("http://localhost:3000/users")
+      .then((response: Response) => {
+        response.json().then((response) => {
+          const data = response as unknown as User[];
+          setUsers(data);
+        });
+      })
+      .catch((error: unknown) => {
+        console.log(error);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <section className="m-20">
       <h3 className="font-bold text-lg mb-5">Users</h3>
       <div className="relative overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500">
-            <thead className="text-xs uppercase bg-primary text-white">
-                <tr>
-                    <th scope="col" className="px-6 py-3">
-                        Product name
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        Color
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        Category
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        Price
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr className="bg-white border-b">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        Apple MacBook Pro 17"
-                    </th>
-                    <td className="px-6 py-4">
-                        Silver
-                    </td>
-                    <td className="px-6 py-4">
-                        Laptop
-                    </td>
-                    <td className="px-6 py-4">
-                        $2999
-                    </td>
-                </tr>
-                <tr className="bg-white border-b">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        Microsoft Surface Pro
-                    </th>
-                    <td className="px-6 py-4">
-                        White
-                    </td>
-                    <td className="px-6 py-4">
-                        Laptop PC
-                    </td>
-                    <td className="px-6 py-4">
-                        $1999
-                    </td>
-                </tr>
-                <tr className="bg-white">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        Magic Mouse 2
-                    </th>
-                    <td className="px-6 py-4">
-                        Black
-                    </td>
-                    <td className="px-6 py-4">
-                        Accessories
-                    </td>
-                    <td className="px-6 py-4">
-                        $99
-                    </td>
-                </tr>
-            </tbody>
+          <thead className="text-xs uppercase bg-primary text-white">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                S/N
+              </th>
+              {(isAdmin || isSuperUser) && (
+                <th scope="col" className="px-6 py-3">
+                  Email
+                </th>
+              )}
+              <th scope="col" className="px-6 py-3">
+                First Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Last Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Gender
+              </th>
+              {isAdmin && (
+                <th scope="col" className="px-6 py-3">
+                  IP Address
+                </th>
+              )}
+              <th scope="col" className="px-6 py-3">
+                Friends
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr className="bg-white border-b" key={`user-${index}`}>
+                <th scope="row" className="px-6 py-4">
+                  {index + 1}
+                </th>
+                {(isAdmin || isSuperUser) && (
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                  >
+                    {user.email}
+                  </th>
+                )}
+                <td className="px-6 py-4">{user.first_name}</td>
+                <td className="px-6 py-4">{user.last_name}</td>
+                <td className="px-6 py-4">{user.gender}</td>
+                {isAdmin && <td className="px-6 py-4">{user.ip_address}</td>}
+                <td className="px-6 py-4">
+                  {user.friends.map((item) => item.name).join(", ")}
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </section>
-  )
-}
-export default User
+  );
+};
+export default User;
