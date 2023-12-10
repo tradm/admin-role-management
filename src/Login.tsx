@@ -5,17 +5,28 @@ import { userType } from "./App";
 const Login = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
   const navigate = useNavigate();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     event.preventDefault();
     mockLoginValidator(username, password);
 
     setUsername("");
     setPassword("");
-    if (error != "") navigate("/");
+
+    if (error) {
+      setIsLoading(false);
+      return;
+    }
+
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate("/");
+    }, 3000);
   };
 
   const mockLoginValidator = (username: string, password: string) => {
@@ -82,9 +93,12 @@ const Login = () => {
 
           <button
             type="submit"
-            className="text-white bg-primary hover:bg-primary focus:outline-none focus:ring-4 focus:ring-primary font-medium rounded-full text-sm px-10 py-2.5 text-center w-[200px] self-center"
+            className="text-white bg-primary hover:bg-primary focus:outline-none focus:ring-4 focus:ring-primary font-medium rounded-full text-sm px-10 py-2.5 text-center w-[200px] self-center flex justify-center items-center"
           >
-            Login
+            <span>Login</span>
+            {isLoading && (
+              <span className="animate-ping inline-flex  h-3 w-3 rounded-full bg-white opacity-75 ml-4"></span>
+            )}
           </button>
         </form>
       </div>

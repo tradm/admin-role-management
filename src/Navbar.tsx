@@ -16,7 +16,7 @@ const Navbar = () => {
             Role
           </span>
         </div>
-        <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <div className="flex md:order-2 space-x-3 md:space-x-0 ">
           <button
             type="button"
             className="text-white bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary/90 font-medium rounded-lg text-sm px-4 py-2 text-center"

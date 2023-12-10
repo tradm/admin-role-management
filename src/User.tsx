@@ -16,11 +16,11 @@ type User = {
   }[];
 };
 
-const isAdmin = localStorage.getItem("role")! == "admin";
-const isSuperUser = localStorage.getItem("role")! == "super_user";
-
 const User = () => {
   const [users, setUsers] = useState<User[]>([]);
+
+  const isAdmin = localStorage.getItem("role")! == "admin";
+  const isSuperUser = localStorage.getItem("role")! == "super_user";
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -51,17 +51,17 @@ const User = () => {
                 <th scope="col" className="px-6 py-3">
                   S/N
                 </th>
-                {(isAdmin || isSuperUser) && (
-                  <th scope="col" className="px-6 py-3">
-                    Email
-                  </th>
-                )}
                 <th scope="col" className="px-6 py-3">
                   First Name
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Last Name
                 </th>
+                {(isAdmin || isSuperUser) && (
+                  <th scope="col" className="px-6 py-3">
+                    Email
+                  </th>
+                )}
                 <th scope="col" className="px-6 py-3">
                   Gender
                 </th>
@@ -81,16 +81,11 @@ const User = () => {
                   <th scope="row" className="px-6 py-4">
                     {index + 1}
                   </th>
-                  {(isAdmin || isSuperUser) && (
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-                    >
-                      {user.email}
-                    </th>
-                  )}
                   <td className="px-6 py-4">{user.first_name}</td>
                   <td className="px-6 py-4">{user.last_name}</td>
+                  {(isAdmin || isSuperUser) && (
+                    <th className="px-6 py-4">{user.email}</th>
+                  )}
                   <td className="px-6 py-4">{user.gender}</td>
                   {isAdmin && <td className="px-6 py-4">{user.ip_address}</td>}
                   <td className="px-6 py-4">
