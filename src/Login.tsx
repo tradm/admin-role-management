@@ -15,8 +15,7 @@ const Login = () => {
 
     setUsername("");
     setPassword("");
-
-    navigate("/");
+    if (error != "") navigate("/");
   };
 
   const mockLoginValidator = (username: string, password: string) => {
@@ -36,10 +35,6 @@ const Login = () => {
     }
 
     setError("Incorrect username or password");
-
-    setTimeout(() => {
-      setError("");
-    }, 5000);
   };
 
   useEffect(() => {
