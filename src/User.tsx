@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { userType } from "./App";
-import { useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
+import { useEffect, useState } from 'react';
+import { userType } from './App';
+import { useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 
 type User = {
   id: number;
@@ -19,14 +19,14 @@ type User = {
 const User = () => {
   const [users, setUsers] = useState<User[]>([]);
 
-  const isAdmin = localStorage.getItem("role")! == "admin";
-  const isSuperUser = localStorage.getItem("role")! == "super_user";
+  const isAdmin = localStorage.getItem('role')! == 'admin';
+  const isSuperUser = localStorage.getItem('role')! == 'super_user';
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (!userType.includes(localStorage.getItem("role")!)) navigate("/login");
+    if (!userType.includes(localStorage.getItem('role')!)) navigate('/login');
 
-    fetch("http://localhost:3000/users")
+    fetch('http://localhost:3000/users')
       .then((response: Response) => {
         response.json().then((response) => {
           const data = response as unknown as User[];
@@ -42,7 +42,7 @@ const User = () => {
   return (
     <>
       <Navbar />
-      <section className="m-20">
+      <section className="m-20 max-w-screen-xl mx-auto p-4">
         <h3 className="font-bold text-lg mb-5">Users</h3>
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left text-gray-500">
@@ -89,7 +89,7 @@ const User = () => {
                   <td className="px-6 py-4">{user.gender}</td>
                   {isAdmin && <td className="px-6 py-4">{user.ip_address}</td>}
                   <td className="px-6 py-4">
-                    {user.friends.map((item) => item.name).join(", ")}
+                    {user.friends.map((item) => item.name).join(', ')}
                   </td>
                 </tr>
               ))}
